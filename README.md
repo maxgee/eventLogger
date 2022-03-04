@@ -1,4 +1,4 @@
 Event Logger
 
-Takes a JSON array of event Logs and displays it in a easy to read dashboard.
+Takes a JSON array of event logs and displays it in a easy to read dashboard.
 
