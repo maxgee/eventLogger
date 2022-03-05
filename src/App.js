@@ -21,6 +21,10 @@ function App() {
   //Sets JSON Data to State
   const [data, setData] = useState(eventData);
   const [order, setOrder] = useState("ASC");
+  //Filter States
+  const [normalEvents, setNormalEvents] = useState(false);
+  const [warningEvents, setWarningEvents] = useState(false);
+  const [errorEvents, setErrorEvents] = useState(false);
   //Modal States
   const [modalShow, setModalShow] = useState(false);
   //Adds Even to Modal When CLicked
@@ -99,6 +103,39 @@ function App() {
     eventData.filter(event => event.type == type).map(eventType=> count++)
     return count
   }
+//Adds or removes events from display given event type
+  function filterEvents(eventType){
+    var comparrisonBool;
+    if(eventType == 1){
+      comparrisonBool = normalEvents
+    }else if(eventType == 2){
+      comparrisonBool = warningEvents
+    }else{
+      comparrisonBool = errorEvents
+    }
+    if(comparrisonBool == false){
+      const dataFiltertedOut = [...data].filter(event => event.type != eventType);
+      setData(dataFiltertedOut);
+      if(eventType == 1){
+        setNormalEvents(true)
+      }else if(eventType == 2){
+        setWarningEvents(true)
+      }else{
+        setErrorEvents(true)
+      }
+    }else{
+      const dataFiltertedBack = eventData.filter(event => event.type == eventType);
+      setData(data => [...data,...dataFiltertedBack]);
+      if(eventType == 1){
+        setNormalEvents(false)
+      }else if(eventType == 2){
+        setWarningEvents(false)
+      }else{
+        setErrorEvents(false)
+      }
+      console.log(normalEvents)
+    }
+  }
 
   return (
       <div>
@@ -113,9 +150,9 @@ function App() {
           <h1>Event Logger</h1>
           <br></br>
           <Row>
-            <Col><Button variant='success'>Normal  <Badge bg='dark' pill>{eventTypeCount(1)}</Badge></Button></Col>
-            <Col><Button variant='warning'>Warning  <Badge bg='dark' pill>{eventTypeCount(2)}</Badge></Button></Col>
-            <Col><Button variant='danger'>Error  <Badge bg='dark' pill>{eventTypeCount(3)}</Badge></Button></Col>
+            <Col><Button variant={normalEvents ? 'outline-success' : 'success' } onClick={() => filterEvents(1)}>Normal  <Badge bg='dark' pill>{eventTypeCount(1)}</Badge></Button></Col>
+            <Col><Button variant={warningEvents ? 'outline-warning' : 'warning' } onClick={() => filterEvents(2)}>Warning  <Badge bg='dark' pill>{eventTypeCount(2)}</Badge></Button></Col>
+            <Col><Button variant={errorEvents ? 'outline-danger' : 'danger' } onClick={() => filterEvents(3)}>Error  <Badge bg='dark' pill>{eventTypeCount(3)}</Badge></Button></Col>
           </Row>
         </div>
         <Table striped bordered hover className='tableStyle'>
